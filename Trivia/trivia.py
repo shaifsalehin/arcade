@@ -63,8 +63,8 @@ def display_winner():
     
     seconds = 0
     start_ticks = pg.time.get_ticks()
-    font = pg.font.Font('Agave.ttf', 100)
-    font2 = pg.font.Font('Agave.ttf', 200)
+    font = pg.font.Font("Assets//fonts//Agave.ttf", 100)
+    font2 = pg.font.Font("Assets//fonts//Agave.ttf", 200)
     gameover_text = font2.render("Game over", True, WHITE)
     player1_text = font.render("Player 1", True, WHITE)
     player2_text = font.render("Player 2", True, WHITE)
@@ -119,13 +119,13 @@ def play_trivia():
     running = True
     
     while running:
-        for i in range(1):
+        for i in range(15):
             lock1, lock2 = False, False
             p1_answer, p2_answer = 5, 5
             pg.event.clear()
             pg.event.set_allowed(JOYBUTTONDOWN)
             retrieve_data(i)
-            font = pg.font.Font('Agave.ttf', 50)
+            font = pg.font.Font("Assets//fonts//Agave.ttf", 50)
             category_text = font.render("Category: " + category, True, WHITE)
             difficulty_text = font.render(
                 "Difficulty: " + difficulty.title(), True, WHITE)

@@ -3,6 +3,7 @@ import pandas as pd
 from urllib.request import urlopen
 import random
 import ftfy
+import os
 
 offline = False
 choices = []
@@ -16,12 +17,14 @@ def connect():
         with urlopen('https://opentdb.com/api.php?amount=50&type=multiple') as page:
             data = json.loads(page.read().decode())
             df = pd.DataFrame(data["results"])
+            print("online")
             return df
     except:
         offline = True
-        with urlopen('file:path') as page:
+        with urlopen('file:Assets/misc/trivia_backup_questions.json') as page:
             data = json.loads(page.read().decode())
             df = pd.DataFrame(data["results"])
+            print("offline")
             return df
 
 
@@ -31,10 +34,8 @@ def get_trivia_data(i):
     df = connect()
     vals = df.values
 
-    if offline:
-        random_question = random.randint(0, len(vals))
-    else:
-        random_question = i
+    random.seed(os.urandom(128))
+    random_question = random.randint(0, len(vals))
 
     category = vals[random_question][0]
     difficulty = vals[random_question][2]

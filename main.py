@@ -92,6 +92,7 @@ class SceneManager:
         self.change_selected_option()
 
     def get_event_menu(self, event):
+   
         if event.type == pg.KEYDOWN:
             '''select new index'''
             if event.key in [pg.K_UP, pg.K_w]:
@@ -101,7 +102,8 @@ class SceneManager:
 
             elif event.key == pg.K_RETURN:
                 self.select_option(self.selected_index)
-        elif event.type == JOYBUTTONDOWN:
+                
+        if event.type == JOYBUTTONDOWN or event.type == JOYBUTTONUP:
             self.select_option(self.selected_index)
         self.mouse_menu_click(event)
 
@@ -118,8 +120,8 @@ class SceneManager:
 
     def pre_render_options(self):
         '''setup render menu options based on selected or deselected'''
-        font_deselect = pg.font.SysFont("arial", 50)
-        font_selected = pg.font.SysFont("arial", 70)
+        font_deselect = pg.font.Font("Assets//fonts//RetroGaming.ttf", 50)
+        font_selected = pg.font.Font("Assets//fonts//RetroGaming.ttf", 75)
 
         rendered_msg = {"des": [], "sel": []}
         for option in self.options:
@@ -188,6 +190,7 @@ class Insert_Coin(States, SceneManager):
 #             self.get_event_menu(event)
 # 
 #             break
+            
         self.done = True
         self.get_event_menu(event)
     def update(self, screen, dt):
@@ -205,11 +208,11 @@ class Game_Select(States, SceneManager):
         States.__init__(self)
         SceneManager.__init__(self)
         self.next = 'game_select'
-        self.options = ['Pong', 'Connect 4', 'Trivia']
+        self.options = ['PONG', 'CONNECT 4', 'TRIVIA']
         self.next_list = ['pong', 'connect4', 'trivia']
         self.pre_render_options()
-        self.from_bottom = 200
-        self.spacer = 75
+        self.from_bottom = 500
+        self.spacer = 100
 
     def cleanup(self):
         print('cleaning up Options state stuff')
@@ -218,16 +221,12 @@ class Game_Select(States, SceneManager):
         print('starting Options state stuff')
 
     def get_event(self, event):
+        
         if event.type == JOYAXISMOTION:
             if (event.axis == 1 and 0.8 <= event.value <= 1.2):
                 self.change_selected_option(-1)
-
             if (event.axis == 1 and -0.8 >= event.value >= -1.2):
                 self.change_selected_option(1)
-        if event.type == JOYBUTTONDOWN:
-            keyboard.press(Key.enter)
-            sleep(0.1)
-            keyboard.release(Key.enter)
         
         self.get_event_menu(event)
 
@@ -253,8 +252,7 @@ class Pong(States):
         play_pong()
 
     def get_event(self, event):
-        if event.type == pg.QUIT:
-            self.quit = True
+        pass
 
     def update(self, screen, dt):
         self.play(screen)
@@ -276,8 +274,7 @@ class Connect4(States):
         play_connect4()
 
     def get_event(self, event):
-        if event.type == pg.QUIT:
-            self.quit = True
+        pass
 
     def update(self, screen, dt):
         self.play(screen)
@@ -300,8 +297,7 @@ class Trivia(States):
         
 
     def get_event(self, event):
-        if event.type == pg.QUIT:
-            self.quit = True
+        pass
 
     def update(self, screen, dt):
         self.play(screen)

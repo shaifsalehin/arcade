@@ -12,7 +12,7 @@ class Ball(pygame.sprite.Sprite):
 
         pygame.draw.circle(self.image, color, (radius, radius), radius)
 
-        self.velocity = [randint(0, 10), randint(-10, 0)]
+        self.velocity = [randint(15, 25), randint(15, 25)]
         self.rect = self.image.get_rect(center=(x, y))
 
     def update(self):
@@ -20,5 +20,6 @@ class Ball(pygame.sprite.Sprite):
         self.rect.y += self.velocity[1]
 
     def bounce(self):
+        rand_y = (self.velocity[1])+(randint(0, 3))
         self.velocity[0] = -self.velocity[0]
-        self.velocity[1] = randint(-8, 8)
+        self.velocity[1] = -rand_y

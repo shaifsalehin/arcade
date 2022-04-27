@@ -7,9 +7,11 @@ import pygame as pg
 from time import sleep
 from pygame.locals import *
 from pynput.keyboard import Key, Controller
+from Other.coin_acceptor import coin_received, coin_accepted
 from Pong.pong import play_pong
 from Connect4.connect4 import play_connect4
 from Trivia.trivia import play_trivia
+
 pg.init()
 pg.display.init()
 
@@ -25,7 +27,8 @@ counter_pin = 37 #pin 37 in BOARD mode = GPIO26 in BCM mode
 GPIO.setmode( GPIO.BOARD ) #change pin to 26 if using BCM mode
 GPIO.setup( counter_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(counter_pin, GPIO.RISING, bouncetime=100)
-
+GPIO.add_event_callback(counter_pin, coin_received)
+pg.mouse.set_visible(False)
 class Main:
     def __init__(self):
         self.done = False
@@ -33,7 +36,7 @@ class Main:
         self.screen = pg.display.set_mode((1920, 1080), pg.FULLSCREEN)
         self.screen_rect = self.screen.get_rect()
         self.clock = pg.time.Clock()
-
+        self.WHITE = (255, 255, 255)
     def setup_states(self, state_dict, start_state):
         self.state_dict = state_dict
         self.state_name = start_state
@@ -103,8 +106,9 @@ class SceneManager:
             elif event.key == pg.K_RETURN:
                 self.select_option(self.selected_index)
                 
-        if event.type == JOYBUTTONDOWN or event.type == JOYBUTTONUP:
-            self.select_option(self.selected_index)
+        if event.type == JOYBUTTONDOWN:# or event.type == JOYBUTTONUP:
+            if event.button == 4:
+                self.select_option(self.selected_index)
         self.mouse_menu_click(event)
 
     def mouse_menu_click(self, event):
@@ -166,7 +170,7 @@ class States(Main):
 
 
 class Insert_Coin(States, SceneManager):
-
+    
     def __init__(self):
         States.__init__(self)
         SceneManager.__init__(self)
@@ -184,23 +188,33 @@ class Insert_Coin(States, SceneManager):
         pass
 
     def get_event(self, event):
-#         coin_detected = GPIO.event_detected(counter_pin)
-#         while (coin_detected == True):
-#             self.done = True
-#             self.get_event_menu(event)
-# 
-#             break
+        coin_inserted = coin_accepted()
+        
+        while coin_inserted:   
+            self.done = True
+            self.get_event_menu(event)
+            break
+    
             
-        self.done = True
-        self.get_event_menu(event)
     def update(self, screen, dt):
 
         self.update_scene()
         self.draw(screen)
 
     def draw(self, screen):
+        #cost_to_play = str(cost_to_play) + "to play"
         screen.fill((0, 0, 0))
-        self.draw_scene(screen)
+        font = pg.font.Font("Assets//fonts//RetroGaming.ttf", 100)
+        insert_coin_text = font.render("Insert coin", True, self.WHITE)
+        insert_coin_rect = insert_coin_text.get_rect()
+        insert_coin_rect = ((1920 // 2) - 400, (1080 // 2))
+        self.screen.blit(insert_coin_text, insert_coin_rect)
+        
+        insert_coin_text = font.render("Insert coin", True, self.WHITE)
+        insert_coin_rect = insert_coin_text.get_rect()
+        insert_coin_rect = ((1920 // 2) - 400, (1080 // 2))
+        self.screen.blit(insert_coin_text, insert_coin_rect)
+        #self.draw_scene(screen)
 
 
 class Game_Select(States, SceneManager):
@@ -224,9 +238,9 @@ class Game_Select(States, SceneManager):
         
         if event.type == JOYAXISMOTION:
             if (event.axis == 1 and 0.8 <= event.value <= 1.2):
-                self.change_selected_option(-1)
-            if (event.axis == 1 and -0.8 >= event.value >= -1.2):
                 self.change_selected_option(1)
+            if (event.axis == 1 and -0.8 >= event.value >= -1.2):
+                self.change_selected_option(-1)
         
         self.get_event_menu(event)
 
@@ -236,6 +250,14 @@ class Game_Select(States, SceneManager):
 
     def draw(self, screen):
         screen.fill((0, 0, 0))
+        font = pg.font.Font("Assets//fonts//RetroGaming.ttf", 100)
+        game_select_text = font.render("     Press     to start a game", True, self.WHITE)
+        game_select_rect = game_select_text.get_rect()
+        game_select__rect = ((500 // 2) + 200, (500 // 2) - 100)
+        self.screen.blit(game_select_text, game_select_rect)
+        
+        pg.draw.circle(self.screen, self.WHITE, ((1920 // 2) - 300, (1080//2) - 470), 50, width=0)
+                                                 
         self.draw_scene(screen)
 
 

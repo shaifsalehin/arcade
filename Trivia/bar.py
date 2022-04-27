@@ -1,5 +1,5 @@
 # source: https://github.com/cameronball/pygame-timer
-import pygame
+import pygame as pg
 
 
 class Bar():
@@ -26,7 +26,7 @@ class Bar():
         self.size = self.width, self.height = size
 
     def draw(self, add_value):
-        pygame.draw.rect(
+        pg.draw.rect(
             self.window,
             self.color,
             (

@@ -2,20 +2,31 @@
 import Trivia.get_data
 import pygame as pg
 from pygame.locals import *
+from Trivia.bar import Bar
 import textwrap
+import time
+import random
 
 pg.init()
+
 pg.joystick.init()
 joysticks = [pg.joystick.Joystick(i)
              for i in range(pg.joystick.get_count())]
 
 
+number_of_questions = 10
+
 WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-RED = (255, 0, 0)
-YELLOW = (255, 255, 0)
+GREEN = (36, 255, 36)
+BLUE = (12, 123, 220)
+RED = (146, 0, 0)
+YELLOW = (255, 194, 10)
 BLACK = (0, 0, 0)
+GREY = (128, 128, 128)
+LIGHTGREY = (192, 192, 192)
+DARKGREY = (128, 128, 128)
+MAGENTA = (255, 0, 255)
+CYAN = (0, 255, 255)
 
 width = 1920
 height = 1080
@@ -28,6 +39,7 @@ p1_answer, p2_answer = 5, 5
 
 lock1, lock2 = False, False
 
+clock = pg.time.Clock()
 
 def retrieve_data(question_num):
     global category, difficulty, question, answer, choices
@@ -41,10 +53,10 @@ def event_checker():
     global p1_answer, p2_answer, lock1, lock2
     for event in pg.event.get():
         if event.type == JOYBUTTONDOWN:
-            if event.instance_id == 1 and not lock1:
+            if event.instance_id == 0 and not lock1:
                 p1_answer = event.button
                 lock1 = True
-            if event.instance_id == 0 and not lock2:
+            if event.instance_id == 1 and not lock2:
                 p2_answer = event.button
                 lock2 = True
 
@@ -52,11 +64,13 @@ def event_checker():
 def are_ya_winning_son():
     global p1_answer, p2_answer, player1, player2
     if p1_answer != 5:
-        if choices[p1_answer] == answer:
-            player1 += 10
+        if p1_answer < 4:
+            if choices[p1_answer] == answer:
+                player1 += 10
     if p2_answer != 5:
-        if choices[p2_answer] == answer:
-            player2 += 10
+        if p2_answer < 4:
+            if choices[p2_answer] == answer:
+                player2 += 10
 
 
 def display_winner():
@@ -70,8 +84,8 @@ def display_winner():
     player2_text = font.render("Player 2", True, WHITE)
     score1_text = font.render("Score: " + str(player1), True, WHITE)
     score2_text = font.render("Score: " + str(player2), True, WHITE)
-    p1_winner_text = font.render("Player 1 wins!", True, WHITE)
-    p2_winner_text = font.render("Player 2 wins!", True, WHITE)
+    p1_winner_text = font.render("Player 1 wins!", True, RED)
+    p2_winner_text = font.render("Player 2 wins!", True, YELLOW)
     draw_winner_text = font.render("It's a draw!", True, WHITE)
 
     gameover_rect = gameover_text.get_rect()
@@ -92,10 +106,54 @@ def display_winner():
     p2_winner_rect = ((width // 2) - 300, (height // 2) + 200)
     draw_winner_rect = ((width // 2) - 300, (height // 2) + 200)
 
+    star_field_slow = []
+    star_field_medium = []
+    star_field_fast = []
+
+
+    for slow_stars in range(50):
+        star_loc_x = random.randrange(0, width)
+        star_loc_y = random.randrange(0, height)
+        star_field_slow.append([star_loc_x, star_loc_y])
+
+    for medium_stars in range(35):
+        star_loc_x = random.randrange(0, width)
+        star_loc_y = random.randrange(0, height)
+        star_field_medium.append([star_loc_x, star_loc_y])
+
+    for fast_stars in range(15):
+        star_loc_x = random.randrange(0, width)
+        star_loc_y = random.randrange(0, height)
+        star_field_fast.append([star_loc_x, star_loc_y])
+    
+    surface.fill(BLACK)
+    
     while True:
         pg.display.update()
+        clock.tick(60)
         seconds = (pg.time.get_ticks()-start_ticks) / 1000
-        surface.fill(BLACK)
+        # for star in star_field_slow:
+            # star[1] += 1
+            # if star[1] > height:
+                # star[0] = random.randrange(0, width)
+                # star[1] = random.randrange(-20, -5)
+            # pg.draw.circle(screen, DARKGREY, star, 3)
+
+        # for star in star_field_medium:
+            # star[1] += 4
+            # if star[1] > height:
+                # star[0] = random.randrange(0, width)
+                # star[1] = random.randrange(-20, -5)
+            # pg.draw.circle(screen, LIGHTGREY, star, 2)
+
+        # for star in star_field_fast:
+            # star[1] += 8
+            # if star[1] > height:
+                # star[0] = random.randrange(0, width)
+                # star[1] = random.randrange(-20, -5)
+            # pg.draw.circle(screen, YELLOW, star, 1)
+            
+     
         surface.blit(gameover_text, gameover_rect)
         surface.blit(player1_text, player1_rect)
         surface.blit(player2_text, player2_rect)
@@ -109,7 +167,7 @@ def display_winner():
         else:
             surface.blit(draw_winner_text, draw_winner_rect)
 
-        if seconds > 10.0:
+        if seconds > 5.0:
             break
     #running = False
 
@@ -117,18 +175,22 @@ def display_winner():
 def play_trivia():
     global player1, player2, p1_answer, p2_answer, lock1, lock2, running
     running = True
-    
+    question_count = 0 
+      
     while running:
-        for i in range(15):
+        for i in range(number_of_questions):
+            bar = Bar(surface)
             lock1, lock2 = False, False
             p1_answer, p2_answer = 5, 5
+            question_count += 1
             pg.event.clear()
             pg.event.set_allowed(JOYBUTTONDOWN)
             retrieve_data(i)
             font = pg.font.Font("Assets//fonts//Agave.ttf", 50)
-            category_text = font.render("Category: " + category, True, WHITE)
+            font1 = pg.font.Font("Assets//fonts//Agave.ttf", 35)
+            category_text = font.render("Category: " + category, True, GREY)
             difficulty_text = font.render(
-                "Difficulty: " + difficulty.title(), True, WHITE)
+                "Difficulty: " + difficulty.title(), True, GREY)
             if len(question) == 1:
                 question_text1 = font.render(question[0], True, WHITE)
             elif len(question) == 2:
@@ -181,11 +243,26 @@ def play_trivia():
             answer1_rect = ((width // 2) - 860, height - (height-660))
             answer2_rect = ((width // 2) - 860, height - (height-760))
             answer3_rect = ((width // 2) - 860, height - (height-860))
-    
+            
+            question_number_text = font.render(f"Question: {question_count} of {number_of_questions}", True, GREY)
+            question_number_rect = question_number_text.get_rect()
+            question_number_rect = ((width // 2) - 200, height - (height-200))
+            
+            instruction1_text = font1.render("Instructions: Both players have 10 seconds to press the button color of your choice. Next question will ", True, GREY)
+            instruction1_rect = instruction1_text.get_rect()
+            instruction1_rect = (30, height - (height- 950))
+            
+            instruction2_text = font1.render("appear after 10 seconds. Score will appear after all questions are finished.", True, GREY)
+            instruction2_rect = instruction2_text.get_rect()
+            instruction2_rect = (280, height - (height- 990))
+        
             start_ticks = pg.time.get_ticks()
             while True:
-    
+                counter = 0
                 surface.fill(BLACK)
+                surface.blit(question_number_text, question_number_rect)
+                surface.blit(instruction1_text, instruction1_rect)
+                surface.blit(instruction2_text, instruction2_rect)
                 surface.blit(category_text, category_rect)
                 surface.blit(difficulty_text, difficulty_rect)
                 surface.blit(question_text1, question_rect1)
@@ -214,9 +291,27 @@ def play_trivia():
                                                 height - (height-880)), 30, width=0)
     
                 event_checker()
-    
+            
                 seconds = (pg.time.get_ticks()-start_ticks) / \
                     1000  # calculate how many seconds
+                
+                # ~ timer_text = font.render(str(int(seconds)), True, WHITE)
+                # ~ timer_rect = instruction1_text.get_rect()
+                # ~ timer_rect = ((width // 2 + 500), height - (height- 930))
+                seconds_in_total = seconds
+                if 0 <= seconds <= 10:
+                    piece_of_the_bar = ((2582 / (10) / bar.smoothness_of_bar))
+                    bar.draw(add_value=piece_of_the_bar)
+                if counter % bar.smoothness_of_bar == 0 and seconds_in_total > 0:
+                    seconds_in_total -= 1
+
+                # If the smoothnes of bar == 1, the program waits 1 second,
+                # and the bar go second per second:
+                time.sleep(1/bar.smoothness_of_bar)
+
+                counter += 1
+                #surface.blit(timer_text, timer_rect)
+                
                 if seconds > 10:  # if more than 10 seconds
                     pg.event.set_blocked(JOYBUTTONDOWN)
                     if choices[0] == answer:
@@ -299,15 +394,16 @@ def play_trivia():
                         pg.draw.circle(
                             surface, BLACK, ((width // 2) - 900, height - (height-780)), 30, width=0)
     
-                if seconds > 13:
+                if seconds > 12:
                     break
-    
+                
                 # Draws the surface object to the screen.
                 pg.display.flip()
             are_ya_winning_son()
         display_winner()
         player1, player2 = 0, 0
         p1_answer, p2_answer = 5, 5
+        pg.event.set_allowed(JOYBUTTONDOWN)
         running = False
     
 #def play_trivia():

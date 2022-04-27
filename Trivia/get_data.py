@@ -17,14 +17,14 @@ def connect():
         with urlopen('https://opentdb.com/api.php?amount=50&type=multiple') as page:
             data = json.loads(page.read().decode())
             df = pd.DataFrame(data["results"])
-            print("online")
+            
             return df
     except:
         offline = True
         with urlopen('file:Assets/misc/trivia_backup_questions.json') as page:
             data = json.loads(page.read().decode())
             df = pd.DataFrame(data["results"])
-            print("offline")
+          
             return df
 
 
@@ -35,7 +35,7 @@ def get_trivia_data(i):
     vals = df.values
 
     random.seed(os.urandom(128))
-    random_question = random.randint(0, len(vals))
+    random_question = random.randint(0, (len(vals)-1))
 
     category = vals[random_question][0]
     difficulty = vals[random_question][2]

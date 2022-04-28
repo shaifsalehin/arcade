@@ -64,7 +64,6 @@ class Main:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_c and pg.key.get_mods() & pg.KMOD_CTRL:
                     print("Ctrl+c pressed, exiting...")
-                    self.done = True
                     pg.quit() 
                     sys.exit()
             self.state.get_event(event)
@@ -112,7 +111,7 @@ class SceneManager:
             elif event.key == pg.K_RETURN:
                 self.select_option(self.selected_index)
                 
-        if event.type == JOYBUTTONDOWN:# or event.type == JOYBUTTONUP:
+        if event.type == JOYBUTTONDOWN:
             if event.button == 4:
                 self.select_option(self.selected_index)
         self.mouse_menu_click(event)
@@ -332,6 +331,29 @@ class Trivia(States):
 
     def play(self, screen):
         self.done = True
+    
+# Add game
+# class Pong(States):
+    # def __init__(self):
+    #   States.__init__(self)
+    #   self.next = 'insert_coin'
+
+    # def cleanup(self):
+    #   pass
+
+    # def startup(self):
+    #   print('starting Pong')
+    #   pass
+
+    # def get_event(self, event):
+    #   pass
+        
+    # def update(self, screen, dt):
+    #   self.play(screen)
+
+    # def play(self, screen):
+    #   self.done = True
+        
         
 app = Main()
 state_dict = {

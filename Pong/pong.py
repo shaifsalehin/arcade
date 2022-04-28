@@ -20,6 +20,7 @@ LIGHTGREY = (192, 192, 192)
 DARKGREY = (128, 128, 128)
 MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
+
 # initialize modules
 pg.init()
 pg.joystick.init()
@@ -90,7 +91,12 @@ def display_winner():
             if star[1] > height:
                 star[0] = random.randrange(0, width)
                 star[1] = random.randrange(-20, -5)
-            pg.draw.circle(screen, DARKGREY, star, 3)
+                
+            if player1 > player2:
+                pg.draw.circle(screen, RED, star, 1)
+            elif player2 > player1:
+                pg.draw.circle(screen, YELLOW, star, 1)
+
 
         for star in star_field_medium:
             star[1] += 4
@@ -104,7 +110,8 @@ def display_winner():
             if star[1] > height:
                 star[0] = random.randrange(0, width)
                 star[1] = random.randrange(-20, -5)
-            pg.draw.circle(screen, YELLOW, star, 1)
+            pg.draw.circle(screen, DARKGREY, star, 3)
+                
         screen.blit(gameover_text, gameover_rect)
 
     

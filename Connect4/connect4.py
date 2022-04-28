@@ -172,7 +172,12 @@ def display_winner(p1, p2, draw):
             if star[1] > height:
                 star[0] = random.randrange(0, width)
                 star[1] = random.randrange(-20, -5)
-            pg.draw.circle(pane.screen, DARKGREY, star, 3)
+                            
+            if player1 > player2:
+                pg.draw.circle(pane.screen, RED, star, 1)
+            elif player2 > player1:
+                pg.draw.circle(pane.screen, YELLOW, star, 1)
+
 
         for star in star_field_medium:
             star[1] += 4
@@ -186,7 +191,7 @@ def display_winner(p1, p2, draw):
             if star[1] > height:
                 star[0] = random.randrange(0, width)
                 star[1] = random.randrange(-20, -5)
-            pg.draw.circle(pane.screen, YELLOW, star, 1)
+            pg.draw.circle(pane.screen, DARKGREY, star, 3)
         
         pane.screen.blit(gameover_text, gameover_rect)
 

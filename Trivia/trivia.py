@@ -28,6 +28,8 @@ DARKGREY = (128, 128, 128)
 MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 
+
+
 width = 1920
 height = 1080
 surface = pg.display.set_mode((width, height), pg.FULLSCREEN)
@@ -132,26 +134,27 @@ def display_winner():
         pg.display.update()
         clock.tick(60)
         seconds = (pg.time.get_ticks()-start_ticks) / 1000
-        # for star in star_field_slow:
-            # star[1] += 1
-            # if star[1] > height:
-                # star[0] = random.randrange(0, width)
-                # star[1] = random.randrange(-20, -5)
-            # pg.draw.circle(screen, DARKGREY, star, 3)
+        
+        for star in star_field_slow:
+            star[1] += 1
+            if star[1] > height:
+                star[0] = random.randrange(0, width)
+                star[1] = random.randrange(-20, -5)
+            pg.draw.circle(surface, DARKGREY, star, 3)
 
-        # for star in star_field_medium:
-            # star[1] += 4
-            # if star[1] > height:
-                # star[0] = random.randrange(0, width)
-                # star[1] = random.randrange(-20, -5)
-            # pg.draw.circle(screen, LIGHTGREY, star, 2)
+        for star in star_field_medium:
+            star[1] += 4
+            if star[1] > height:
+                star[0] = random.randrange(0, width)
+                star[1] = random.randrange(-20, -5)
+            pg.draw.circle(surface, LIGHTGREY, star, 2)
 
-        # for star in star_field_fast:
-            # star[1] += 8
-            # if star[1] > height:
-                # star[0] = random.randrange(0, width)
-                # star[1] = random.randrange(-20, -5)
-            # pg.draw.circle(screen, YELLOW, star, 1)
+        for star in star_field_fast:
+            star[1] += 8
+            if star[1] > height:
+                star[0] = random.randrange(0, width)
+                star[1] = random.randrange(-20, -5)
+            pg.draw.circle(surface, YELLOW, star, 1)
             
      
         surface.blit(gameover_text, gameover_rect)
@@ -187,7 +190,7 @@ def play_trivia():
             pg.event.set_allowed(JOYBUTTONDOWN)
             retrieve_data(i)
             font = pg.font.Font("Assets//fonts//Agave.ttf", 50)
-            font1 = pg.font.Font("Assets//fonts//Agave.ttf", 35)
+            font1 = pg.font.Font("Assets//fonts//Agave.ttf", 30)
             category_text = font.render("Category: " + category, True, GREY)
             difficulty_text = font.render(
                 "Difficulty: " + difficulty.title(), True, GREY)
@@ -246,21 +249,27 @@ def play_trivia():
             
             question_number_text = font.render(f"Question: {question_count} of {number_of_questions}", True, GREY)
             question_number_rect = question_number_text.get_rect()
-            question_number_rect = ((width // 2) - 200, height - (height-200))
+            question_number_rect = ((width // 2) - 220, height - (height-200))
             
-            instruction1_text = font1.render("Instructions: Both players have 10 seconds to press the button color of your choice. Next question will ", True, GREY)
+            instruction1_text = font1.render("Instructions: This is a 2 player game. You each have 10 seconds to press the button color of your choice.", True, GREY)
             instruction1_rect = instruction1_text.get_rect()
             instruction1_rect = (30, height - (height- 950))
             
-            instruction2_text = font1.render("appear after 10 seconds. Score will appear after all questions are finished.", True, GREY)
+            instruction2_text = font1.render("Next question will appear after timer runs out and answer is revealed.", True, GREY)
             instruction2_rect = instruction2_text.get_rect()
             instruction2_rect = (280, height - (height- 990))
+            
+            score_text = font.render(f"Player 1 score:  {player1}                                 Player 2 score: {player2}", True, GREY)
+            score_rect = question_number_text.get_rect()
+            score_rect = ((width // 2) - 900, height - (height-200))
         
             start_ticks = pg.time.get_ticks()
             while True:
                 counter = 0
                 surface.fill(BLACK)
+                surface.blit(score_text, score_rect)
                 surface.blit(question_number_text, question_number_rect)
+                surface.blit(answer0_text, answer0_rect)
                 surface.blit(instruction1_text, instruction1_rect)
                 surface.blit(instruction2_text, instruction2_rect)
                 surface.blit(category_text, category_rect)
@@ -393,7 +402,7 @@ def play_trivia():
                             surface, BLACK, ((width // 2) - 900, height - (height-680)), 30, width=0)
                         pg.draw.circle(
                             surface, BLACK, ((width // 2) - 900, height - (height-780)), 30, width=0)
-    
+                
                 if seconds > 12:
                     break
                 

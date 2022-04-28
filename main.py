@@ -61,6 +61,12 @@ class Main:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.done = True
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_c and pg.key.get_mods() & pg.KMOD_CTRL:
+                    print("Ctrl+c pressed, exiting...")
+                    self.done = True
+                    pg.quit() 
+                    sys.exit()
             self.state.get_event(event)
 
     def main_game_loop(self):
@@ -182,10 +188,10 @@ class Insert_Coin(States, SceneManager):
         self.spacer = 75
 
     def cleanup(self):
-        print('cleaning up Main Menu state stuff')
+        print("Insert coin screen done...")
 
     def startup(self):
-        pass
+        print("Insert coin screen")
 
     def get_event(self, event):
         coin_inserted = coin_accepted()
@@ -229,10 +235,10 @@ class Game_Select(States, SceneManager):
         self.spacer = 100
 
     def cleanup(self):
-        print('cleaning up Options state stuff')
+        print("Game selected. Starting game...")
 
     def startup(self):
-        print('starting Options state stuff')
+        print('Starting game select')
 
     def get_event(self, event):
         
@@ -267,15 +273,15 @@ class Pong(States):
         self.next = 'insert_coin'
 
     def cleanup(self):
-        print('cleaning up Game state stuff')
+        print('Pong finished. Going back to main screen')
 
     def startup(self):
-        print('starting Game state stuff')
+        print('starting Pong')
         play_pong()
 
     def get_event(self, event):
         pass
-
+        
     def update(self, screen, dt):
         self.play(screen)
 
@@ -289,10 +295,10 @@ class Connect4(States):
         self.next = 'insert_coin'
 
     def cleanup(self):
-        print('cleaning up Game state stuff')
+        print('COnnect 4 finished. Going back to main screen')
 
     def startup(self):
-        print('starting Game state stuff')
+        print('Starting Connect 4')
         play_connect4()
 
     def get_event(self, event):
@@ -311,10 +317,10 @@ class Trivia(States):
         self.next = 'insert_coin'
 
     def cleanup(self):
-        print('cleaning up Game state stuff')
+        print('Trivia finished. Going back to main screen')
 
     def startup(self):
-        print('starting Game state stuff')
+        print('Starting Trivia')
         play_trivia()
         
 

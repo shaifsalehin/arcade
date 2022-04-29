@@ -173,9 +173,9 @@ def display_winner(p1, p2, draw):
                 star[0] = random.randrange(0, width)
                 star[1] = random.randrange(-20, -5)
                             
-            if player1 > player2:
+            if p1 > p2:
                 pg.draw.circle(pane.screen, RED, star, 1)
-            elif player2 > player1:
+            elif p2 > p1:
                 pg.draw.circle(pane.screen, YELLOW, star, 1)
 
 

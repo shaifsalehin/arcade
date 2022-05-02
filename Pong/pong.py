@@ -31,7 +31,6 @@ screen = pg.display.set_mode(size, pg.FULLSCREEN)
 
 running = True
 
-
 def display_winner():
     global player1, player2, running
     width = 1920
@@ -128,7 +127,7 @@ def display_winner():
 
 def play_pong():
     global player1, player2, running
-    
+    pg.event.clear()
     start_ticks = pg.time.get_ticks()
 
     # create left paddle
@@ -140,7 +139,7 @@ def play_pong():
     paddleright = Paddle(YELLOW, 50, 120) # color, width, length
     paddleright.rect.x = 1870
     paddleright.rect.y = 490
-
+    
     # create ball
     ball = Ball(WHITE, 960, 490, 50, 100) # color, x pos, y pos, radius, speed
     ball.rect.x = 960
@@ -155,9 +154,6 @@ def play_pong():
     all_sprites_list.add(paddleleft)
     all_sprites_list.add(paddleright)
     all_sprites_list.add(ball)
-
-    # loop continues running until user exits the game
-    running = True
 
     # create joysticks
     joysticks = [pg.joystick.Joystick(i)
@@ -179,12 +175,14 @@ def play_pong():
             
     score1_text = font.render(f"Player 1 score: {player1}", True, GREY)
     score1_rect = score1_text.get_rect()
-    score1_rect = (280, 10)
+    score1_rect = (280, 50)
             
     score2_text = font.render(f"Player 2 score: {player2}", True, GREY)
     score2_rect = score2_text.get_rect()
-    score2_rect = (1250, 10)
-
+    score2_rect = (1250, 50)
+    
+    running = True
+    
     while running:
         pg.display.update()
         pg.event.pump()
@@ -232,10 +230,10 @@ def play_pong():
             if ball.rect.y <= 0:
                 ball.rect.y = 400
                 
-        if ball.rect.x < (paddleright.rect.x-50) and pg.sprite.collide_mask(paddleright, ball):
+        if (paddleright.rect.x-70) < ball.rect.x < (paddleright.rect.x-50) and pg.sprite.collide_mask(paddleright, ball):
             ball.bounce()
         
-        if ball.rect.x > (paddleleft.rect.x-50) and pg.sprite.collide_mask(paddleleft, ball):
+        if (paddleleft.rect.x-30) < ball.rect.x < (paddleleft.rect.x+20) and pg.sprite.collide_mask(paddleleft, ball):
             ball.bounce()
         #draw background screen
         screen.fill(BLACK)
@@ -254,7 +252,8 @@ def play_pong():
             display_winner()
             player1, player2 = 0, 0
             screen.fill(BLACK)
+            running = False
             break
-    running = False
+       
 
     

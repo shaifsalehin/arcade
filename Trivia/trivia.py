@@ -14,7 +14,7 @@ joysticks = [pg.joystick.Joystick(i)
              for i in range(pg.joystick.get_count())]
 
 
-number_of_questions = 10
+number_of_questions = 1
 
 WHITE = (255, 255, 255)
 GREEN = (36, 255, 36)
@@ -28,8 +28,6 @@ DARKGREY = (128, 128, 128)
 MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 
-
-
 width = 1920
 height = 1080
 surface = pg.display.set_mode((width, height), pg.FULLSCREEN)
@@ -42,6 +40,26 @@ p1_answer, p2_answer = 5, 5
 lock1, lock2 = False, False
 
 clock = pg.time.Clock()
+
+star_field_slow = []
+star_field_medium = []
+star_field_fast = []
+
+
+for slow_stars in range(50):
+    star_loc_x = random.randrange(0, width)
+    star_loc_y = random.randrange(0, height)
+    star_field_slow.append([star_loc_x, star_loc_y])
+
+for medium_stars in range(35):
+    star_loc_x = random.randrange(0, width)
+    star_loc_y = random.randrange(0, height)
+    star_field_medium.append([star_loc_x, star_loc_y])
+
+for fast_stars in range(15):
+    star_loc_x = random.randrange(0, width)
+    star_loc_y = random.randrange(0, height)
+    star_field_fast.append([star_loc_x, star_loc_y])
 
 def retrieve_data(question_num):
     global category, difficulty, question, answer, choices
@@ -108,31 +126,11 @@ def display_winner():
     p2_winner_rect = ((width // 2) - 300, (height // 2) + 200)
     draw_winner_rect = ((width // 2) - 300, (height // 2) + 200)
 
-    star_field_slow = []
-    star_field_medium = []
-    star_field_fast = []
-
-
-    for slow_stars in range(50):
-        star_loc_x = random.randrange(0, width)
-        star_loc_y = random.randrange(0, height)
-        star_field_slow.append([star_loc_x, star_loc_y])
-
-    for medium_stars in range(35):
-        star_loc_x = random.randrange(0, width)
-        star_loc_y = random.randrange(0, height)
-        star_field_medium.append([star_loc_x, star_loc_y])
-
-    for fast_stars in range(15):
-        star_loc_x = random.randrange(0, width)
-        star_loc_y = random.randrange(0, height)
-        star_field_fast.append([star_loc_x, star_loc_y])
     
     surface.fill(BLACK)
     
     while True:
-        pg.display.update()
-        clock.tick(60)
+        surface.fill(BLACK)
         seconds = (pg.time.get_ticks()-start_ticks) / 1000
         
         for star in star_field_slow:
@@ -142,9 +140,9 @@ def display_winner():
                 star[1] = random.randrange(-20, -5)
                             
             if player1 > player2:
-                pg.draw.circle(surface, RED, star, 1)
+                pg.draw.circle(surface, RED, star, 3)
             elif player2 > player1:
-                pg.draw.circle(surface, YELLOW, star, 1)
+                pg.draw.circle(surface, YELLOW, star, 3)
 
 
         for star in star_field_medium:
@@ -160,7 +158,7 @@ def display_winner():
                 star[0] = random.randrange(0, width)
                 star[1] = random.randrange(-20, -5)
             pg.draw.circle(surface, DARKGREY, star, 3)
-            
+    
      
         surface.blit(gameover_text, gameover_rect)
         surface.blit(player1_text, player1_rect)
@@ -174,10 +172,12 @@ def display_winner():
             surface.blit(p2_winner_text, p2_winner_rect)
         else:
             surface.blit(draw_winner_text, draw_winner_rect)
-
+                    
+        clock.tick(60)
+        pg.display.update()
+        
         if seconds > 5.0:
             break
-    #running = False
 
 
 def play_trivia():

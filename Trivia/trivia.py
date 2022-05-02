@@ -14,7 +14,7 @@ joysticks = [pg.joystick.Joystick(i)
              for i in range(pg.joystick.get_count())]
 
 
-number_of_questions = 1
+number_of_questions = 10
 
 WHITE = (255, 255, 255)
 GREEN = (36, 255, 36)
@@ -143,7 +143,6 @@ def display_winner():
                 pg.draw.circle(surface, RED, star, 3)
             elif player2 > player1:
                 pg.draw.circle(surface, YELLOW, star, 3)
-
 
         for star in star_field_medium:
             star[1] += 4

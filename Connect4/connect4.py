@@ -25,6 +25,24 @@ CYAN = (0, 255, 255)
 width = 1920
 height = 1080
 
+star_field_slow = []
+star_field_medium = []
+star_field_fast = []
+
+for slow_stars in range(50): 
+    star_loc_x = random.randrange(0, width)
+    star_loc_y = random.randrange(0, height)
+    star_field_slow.append([star_loc_x, star_loc_y])
+
+for medium_stars in range(35):
+    star_loc_x = random.randrange(0, width)
+    star_loc_y = random.randrange(0, height)
+    star_field_medium.append([star_loc_x, star_loc_y])
+
+for fast_stars in range(15):
+    star_loc_x = random.randrange(0, width)
+    star_loc_y = random.randrange(0, height)
+    star_field_fast.append([star_loc_x, star_loc_y])
 
 class Pane:
     
@@ -119,8 +137,6 @@ class Pane:
 
 def display_winner(p1, p2, draw):
 
-    #screen = pg.display.set_mode(
-            #(width, height), pg.FULLSCREEN)
     pane = Pane(6, 15, 128)
     seconds = 0
     start_ticks = pg.time.get_ticks()
@@ -141,30 +157,10 @@ def display_winner(p1, p2, draw):
     p2_winner_rect = ((width // 2) - 330, (height // 2) - 50)
     draw_winner_rect = ((width // 2) - 330, (height // 2) - 50)
     
-    star_field_slow = []
-    star_field_medium = []
-    star_field_fast = []
-
-    for slow_stars in range(50): 
-        star_loc_x = random.randrange(0, width)
-        star_loc_y = random.randrange(0, height)
-        star_field_slow.append([star_loc_x, star_loc_y])
-
-    for medium_stars in range(35):
-        star_loc_x = random.randrange(0, width)
-        star_loc_y = random.randrange(0, height)
-        star_field_medium.append([star_loc_x, star_loc_y])
-
-    for fast_stars in range(15):
-        star_loc_x = random.randrange(0, width)
-        star_loc_y = random.randrange(0, height)
-        star_field_fast.append([star_loc_x, star_loc_y])
+    pane.screen.fill(BLACK)
 
     while True:
-        pg.display.update()
-
-        #set frames per second
-        clock.tick(60)
+        pane.screen.fill(BLACK)
         seconds = (pg.time.get_ticks()-start_ticks) / 1000
         
         for star in star_field_slow:
@@ -174,9 +170,9 @@ def display_winner(p1, p2, draw):
                 star[1] = random.randrange(-20, -5)
                             
             if p1 > p2:
-                pg.draw.circle(pane.screen, RED, star, 1)
+                pg.draw.circle(pane.screen, RED, star, 3)
             elif p2 > p1:
-                pg.draw.circle(pane.screen, YELLOW, star, 1)
+                pg.draw.circle(pane.screen, YELLOW, star, 3)
 
 
         for star in star_field_medium:
@@ -201,7 +197,13 @@ def display_winner(p1, p2, draw):
             pane.screen.blit(p2_winner_text, p2_winner_rect)
         else:
             pane.screen.blit(draw_winner_text, draw_winner_rect)
-
+               
+        
+        #set frames per second
+        clock.tick(60)
+        
+        pg.display.update()
+        
         if seconds > 5.0:
             break
     #running = False

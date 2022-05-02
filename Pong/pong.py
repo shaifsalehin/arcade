@@ -132,17 +132,17 @@ def play_pong():
     start_ticks = pg.time.get_ticks()
 
     # create left paddle
-    paddleleft = Paddle(RED, 30, 200)
-    paddleleft.rect.x = 1
+    paddleleft = Paddle(RED, 50, 120) # color, width, length
+    paddleleft.rect.x = 0
     paddleleft.rect.y = 490
 
     # create right paddle
-    paddleright = Paddle(YELLOW, 30, 200)
-    paddleright.rect.x = 1890
+    paddleright = Paddle(YELLOW, 50, 120) # color, width, length
+    paddleright.rect.x = 1870
     paddleright.rect.y = 490
 
     # create ball
-    ball = Ball(WHITE, 960, 490, 50, 100)
+    ball = Ball(WHITE, 960, 490, 50, 100) # color, x pos, y pos, radius, speed
     ball.rect.x = 960
     ball.rect.y = 490
 
@@ -184,6 +184,7 @@ def play_pong():
     score2_text = font.render(f"Player 2 score: {player2}", True, GREY)
     score2_rect = score2_text.get_rect()
     score2_rect = (1250, 10)
+
     while running:
         pg.display.update()
         pg.event.pump()
@@ -213,11 +214,11 @@ def play_pong():
         # logic
         all_sprites_list.update()
 
-        if ball.rect.x >= 1920:
+        if ball.rect.x > 2000:
             player1 += 1
             play_pong()
             
-        if ball.rect.x <= 0:
+        if ball.rect.x < -100:
             player2 += 1
             play_pong()
             
@@ -231,10 +232,11 @@ def play_pong():
             if ball.rect.y <= 0:
                 ball.rect.y = 400
                 
-        if ball.rect.x > 25 or ball.rect.x < 1895:
-            if pg.sprite.collide_mask(paddleleft, ball) or \
-                pg.sprite.collide_mask(paddleright, ball):
-                ball.bounce()
+        if ball.rect.x < (paddleright.rect.x-50) and pg.sprite.collide_mask(paddleright, ball):
+            ball.bounce()
+        
+        if ball.rect.x > (paddleleft.rect.x-50) and pg.sprite.collide_mask(paddleleft, ball):
+            ball.bounce()
         #draw background screen
         screen.fill(BLACK)
         screen.blit(instruction_text, instruction_rect)
@@ -254,5 +256,5 @@ def play_pong():
             screen.fill(BLACK)
             break
     running = False
-    
+
     

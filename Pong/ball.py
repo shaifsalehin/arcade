@@ -10,11 +10,9 @@ class Ball(pygame.sprite.Sprite):
         self.image.fill(BLACK)
         self.image.set_colorkey(BLACK)
 
-        pygame.draw.circle(self.image, color, (radius, radius), radius)
-
-        self.velocity = [randint(15, 25), randint(15, 25)]
-        self.rect = self.image.get_rect(center=(x, y))
-
+        self.velocity = [randint(15, 20), randint(15, 20)]
+        self.rect = pygame.draw.circle(self.image, color, (radius, radius), radius)
+ 
     def update(self):
         self.rect.x += self.velocity[0]
         self.rect.y += self.velocity[1]

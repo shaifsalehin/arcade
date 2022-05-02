@@ -128,7 +128,7 @@ def display_winner():
             
                 #set frames per second
         clock.tick(60)
-        pg.display.flip()
+        pg.display.update()
         
         if seconds > 3.0:
             #running = False

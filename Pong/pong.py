@@ -1,4 +1,6 @@
 # source https://www.101computing.net/pong-tutorial-using-pg-getting-started/
+# starfield source: https://gist.github.com/ogilviemt/9b05a89d023054e6279f
+
 # modified by I'muniqe Hill and Shaif Salehin
 
 import pygame as pg  # required pygame 2.0+
@@ -21,6 +23,9 @@ DARKGREY = (128, 128, 128)
 MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 
+width = 1920
+height = 1080
+    
 # initialize modules
 pg.init()
 pg.joystick.init()
@@ -31,6 +36,27 @@ screen = pg.display.set_mode(size, pg.FULLSCREEN)
 
 running = True
 
+    
+star_field_slow = []
+star_field_medium = []
+star_field_fast = []
+    
+
+for slow_stars in range(50):
+    star_loc_x = random.randrange(0, width)
+    star_loc_y = random.randrange(0, height)
+    star_field_slow.append([star_loc_x, star_loc_y])
+
+for medium_stars in range(35):
+    star_loc_x = random.randrange(0, width)
+    star_loc_y = random.randrange(0, height)
+    star_field_medium.append([star_loc_x, star_loc_y])
+
+for fast_stars in range(15):
+    star_loc_x = random.randrange(0, width)
+    star_loc_y = random.randrange(0, height)
+    star_field_fast.append([star_loc_x, star_loc_y])
+        
 def display_winner():
     global player1, player2, running
     width = 1920
@@ -58,31 +84,10 @@ def display_winner():
     p1_winner_rect = ((width // 2) - 300, (height // 2) + 70)
     p2_winner_rect = ((width // 2) - 300, (height // 2) + 70)
     draw_winner_rect = ((width // 2) - 300, (height // 2) + 70)
-    
-    star_field_slow = []
-    star_field_medium = []
-    star_field_fast = []
 
-    for slow_stars in range(50):
-        star_loc_x = random.randrange(0, width)
-        star_loc_y = random.randrange(0, height)
-        star_field_slow.append([star_loc_x, star_loc_y])
-
-    for medium_stars in range(35):
-        star_loc_x = random.randrange(0, width)
-        star_loc_y = random.randrange(0, height)
-        star_field_medium.append([star_loc_x, star_loc_y])
-
-    for fast_stars in range(15):
-        star_loc_x = random.randrange(0, width)
-        star_loc_y = random.randrange(0, height)
-        star_field_fast.append([star_loc_x, star_loc_y])
     screen.fill(BLACK)
     while True:
-        pg.display.update()
-
-        #set frames per second
-        clock.tick(60)
+        screen.fill(BLACK)
         seconds = (pg.time.get_ticks()-start_ticks) / 1000
         
         for star in star_field_slow:
@@ -92,9 +97,9 @@ def display_winner():
                 star[1] = random.randrange(-20, -5)
                 
             if player1 > player2:
-                pg.draw.circle(screen, RED, star, 1)
+                pg.draw.circle(screen, RED, star, 3)
             elif player2 > player1:
-                pg.draw.circle(screen, YELLOW, star, 1)
+                pg.draw.circle(screen, YELLOW, star, 3)
 
 
         for star in star_field_medium:
@@ -120,7 +125,11 @@ def display_winner():
             screen.blit(p2_winner_text, p2_winner_rect)
         else:
             screen.blit(draw_winner_text, draw_winner_rect)
-    
+            
+                #set frames per second
+        clock.tick(60)
+        pg.display.flip()
+        
         if seconds > 3.0:
             #running = False
             break

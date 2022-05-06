@@ -13,7 +13,6 @@ def connect():
     global offline
     try:
         offline = False
-        # https://opentdb.com/api.php?amount=20&type=multiple
         with urlopen('https://opentdb.com/api.php?amount=50&type=multiple') as page:
             data = json.loads(page.read().decode())
             df = pd.DataFrame(data["results"])

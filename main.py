@@ -333,26 +333,31 @@ class Trivia(States):
         self.done = True
     
 # Add game
-# class Pong(States):
-    # def __init__(self):
-    #   States.__init__(self)
-    #   self.next = 'insert_coin'
+class GameName(States):
+    def __init__(self):
+        States.__init__(self)
+        self.next = 'insert_coin' # which screen to return to
 
-    # def cleanup(self):
-    #   pass
+    def cleanup(self):
+        pass
 
-    # def startup(self):
-    #   print('starting Pong')
-    #   pass
-
-    # def get_event(self, event):
-    #   pass
-        
-    # def update(self, screen, dt):
-    #   self.play(screen)
-
-    # def play(self, screen):
-    #   self.done = True
+    def startup(self):
+        print('starting game')
+        # main game function goes here
+        pass
+    
+    # any events to handle when it's being run
+    # events are usually handled within the game itself
+    def get_event(self, event):
+        pass
+    
+    # handles screen switching between states
+    def update(self, screen, dt):
+        self.play(screen)
+    
+    # switch the done flag when state is over
+    def play(self, screen):
+        self.done = True
         
         
 app = Main()

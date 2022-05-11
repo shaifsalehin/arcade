@@ -1,4 +1,4 @@
-#  coin_acceptor.py
+#  bg_test.py
 #  
 #  Copyright 2022  <Shaif Salehin, Arianna Martinez, I'munique Hill>
 #  
@@ -17,29 +17,34 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #  
-#  
 #  Created by: Shaif Salehin
 
-import RPi.GPIO as GPIO
+import cv2
+import numpy as np 
 
 
-#setup
-cost_to_play = 0.00# how much $ in coins to charge for playing, increment in 0.25 (only quarters are currently accepted)
-credit = 0.00 # don't change unless different types of coins are being added other than quarters
+while True:
+    #This is to check whether to break the first loop
+    isclosed=0
+    cap = cv2.VideoCapture('Assets/misc/bg.mp4')
+    while (True):
 
-    
-def coin_received(object):
-	global credit
+        ret, frame = cap.read()
+        # It should only show the frame when the ret is true
+        if ret == True:
 
-	credit += 0.25
+            cv2.imshow('frame',frame)
+            if cv2.waitKey(1) == 27:
+                # When esc is pressed isclosed is 1
+                isclosed=1
+                break
+        else:
+            break
+    # To break the loop if it is closed manually
+    if isclosed:
+        break
 
-    
-def coin_accepted():
-	global credit, cost_to_play
-	
-	if credit >= cost_to_play:
-		credit = 0 # correct amount of coins inserted, entered game select, reset credits
-		return True
-	else:
-		return False
 
+
+cap.release()
+cv2.destroyAllWindows()

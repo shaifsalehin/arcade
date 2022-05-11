@@ -1,7 +1,27 @@
-# source https://www.101computing.net/pong-tutorial-using-pg-getting-started/
-# starfield source: https://gist.github.com/ogilviemt/9b05a89d023054e6279f
-
-# modified by I'muniqe Hill and Shaif Salehin
+#  pong.py
+#  
+#  Copyright 2022  <Shaif Salehin, Arianna Martinez, I'munique Hill>
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
+#
+#  Source: https://www.101computing.net/pong-tutorial-using-pg-getting-started/
+#  Starfield source: https://gist.github.com/ogilviemt/9b05a89d023054e6279f
+#
+#  Modified by: I'muniqe Hill and Shaif Salehin
 
 import pygame as pg  # required pygame 2.0+
 from pygame.locals import *
@@ -140,12 +160,12 @@ def play_pong():
     start_ticks = pg.time.get_ticks()
 
     # create left paddle
-    paddleleft = Paddle(RED, 50, 120) # color, width, length
+    paddleleft = Paddle(RED, 50, 200) # color, width, length
     paddleleft.rect.x = 0
     paddleleft.rect.y = 490
 
     # create right paddle
-    paddleright = Paddle(YELLOW, 50, 120) # color, width, length
+    paddleright = Paddle(YELLOW, 50, 200) # color, width, length
     paddleright.rect.x = 1870
     paddleright.rect.y = 490
     

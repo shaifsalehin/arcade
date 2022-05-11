@@ -1,13 +1,34 @@
-# source https://python-forum.io/thread-336.html
-# modified by Shaif Salehin
+#  main.py
+#  
+#  Copyright 2022  <Shaif Salehin, Arianna Martinez, I'munique Hill>
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
+#  
+#  Source: https://python-forum.io/thread-336.html
+#
+#  Modified by: Shaif Salehin
 
 import sys
 import RPi.GPIO as GPIO
 import pygame as pg
+import cv2 # for animated background, it's not currently looping so it's disabled
 from time import sleep
 from pygame.locals import *
-from pynput.keyboard import Key, Controller
-from Other.coin_acceptor import coin_received, coin_accepted
+from Other.coin_acceptor import coin_received, coin_accepted, cost_to_play
 from Pong.pong import play_pong
 from Connect4.connect4 import play_connect4
 from Trivia.trivia import play_trivia
@@ -20,7 +41,6 @@ joysticks = [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
 for joystick in joysticks:
     print(joystick.get_name())
 
-keyboard = Controller()
 
 counter_pin = 37 #pin 37 in BOARD mode = GPIO26 in BCM mode
 
@@ -35,8 +55,12 @@ class Main:
         self.fps = 60
         self.screen = pg.display.set_mode((1920, 1080), pg.FULLSCREEN)
         self.screen_rect = self.screen.get_rect()
+        self.video = cv2.VideoCapture("bg.mp4")
+        self.success, self.video_image = self.video.read()
+        self.fps = self.video.get(cv2.CAP_PROP_FPS)
         self.clock = pg.time.Clock()
         self.WHITE = (255, 255, 255)
+        self.YELLOW = (255, 194, 10)
     def setup_states(self, state_dict, start_state):
         self.state_dict = state_dict
         self.state_name = start_state
@@ -207,18 +231,33 @@ class Insert_Coin(States, SceneManager):
         self.draw(screen)
 
     def draw(self, screen):
-        #cost_to_play = str(cost_to_play) + "to play"
+        #global cost_to_play
+        cost = "$" + str(cost_to_play) + " to play"
         screen.fill((0, 0, 0))
+        
+        #animated background stuff
+        #This is to check whether to break the first loop
+        # cap = cv2.VideoCapture('bg.mp4')
+        # while True:
+            # ret, frame = cap.read()
+
+            # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            # frame = frame.swapaxes(0, 1)
+            # pg.surfarray.blit_array(self.screen, frame)
+            # pg.display.update()
         font = pg.font.Font("Assets//fonts//RetroGaming.ttf", 100)
-        insert_coin_text = font.render("Insert coin", True, self.WHITE)
+        font1 = pg.font.Font("Assets//fonts//RetroGaming.ttf", 60)
+        insert_coin_text = font.render("Insert coin", True, self.YELLOW)
         insert_coin_rect = insert_coin_text.get_rect()
         insert_coin_rect = ((1920 // 2) - 400, (1080 // 2))
         self.screen.blit(insert_coin_text, insert_coin_rect)
         
-        insert_coin_text = font.render("Insert coin", True, self.WHITE)
-        insert_coin_rect = insert_coin_text.get_rect()
-        insert_coin_rect = ((1920 // 2) - 400, (1080 // 2))
-        self.screen.blit(insert_coin_text, insert_coin_rect)
+        cost_text = font1.render((cost), True, self.WHITE)
+        cost_rect = insert_coin_text.get_rect()
+        cost_rect = ((1920 // 2) - 250, (1080 // 2) + 150)
+        self.screen.blit(cost_text, cost_rect)
+        
+        
         #self.draw_scene(screen)
 
 
@@ -333,31 +372,26 @@ class Trivia(States):
         self.done = True
     
 # Add game
-class GameName(States):
-    def __init__(self):
-        States.__init__(self)
-        self.next = 'insert_coin' # which screen to return to
+# class Pong(States):
+    # def __init__(self):
+    #   States.__init__(self)
+    #   self.next = 'insert_coin'
 
-    def cleanup(self):
-        pass
+    # def cleanup(self):
+    #   pass
 
-    def startup(self):
-        print('starting game')
-        # main game function goes here
-        pass
-    
-    # any events to handle when it's being run
-    # events are usually handled within the game itself
-    def get_event(self, event):
-        pass
-    
-    # handles screen switching between states
-    def update(self, screen, dt):
-        self.play(screen)
-    
-    # switch the done flag when state is over
-    def play(self, screen):
-        self.done = True
+    # def startup(self):
+    #   print('starting Pong')
+    #   pass
+
+    # def get_event(self, event):
+    #   pass
+        
+    # def update(self, screen, dt):
+    #   self.play(screen)
+
+    # def play(self, screen):
+    #   self.done = True
         
         
 app = Main()

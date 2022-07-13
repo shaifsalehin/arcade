@@ -4,4 +4,4 @@ Coin accepting arcade gaming system built entirely on Python for Senior Projects
 
 - Pong
 - Connect 4
-- Triviaa
+- Trivia
